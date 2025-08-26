@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import supabase from "../config/Superbase"
+import { addItem } from "../action/action"
 
 const Create = () => {
   const navigate = useNavigate()
@@ -15,15 +16,9 @@ const Create = () => {
     if (!name || !text || !stock) {
       return setFormError('Please fill in all the fields correctly')
     }
-    const { data, error } = await supabase
-      .from('items')
-      .insert([{ name, stock, text }])
-    if (error) {
-      setFormError('Please fill in all the fields correctly')
-    }
-    if (data) {
+    const createData = await addItem(name, text, stock)
+    if (createData) {
       setFormError(null)
-      console.log(data)
       navigate('/')
     }
   }
